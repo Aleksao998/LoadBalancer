@@ -1,5 +1,18 @@
 package main
-import "fmt"
+
+import (
+	"fmt"
+
+	"github.com/Aleksao998/LoadBalancer/app"
+)
+
 func main() {
-    fmt.Println("hello world")
+
+	fmt.Printf("Running Load Balancer service\n")
+
+	app := app.NewApp()
+	app.Run()
+
+	fmt.Printf("Exiting Load Balancer service\n")
+
 }
