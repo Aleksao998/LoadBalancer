@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/Aleksao998/LoadBalancer/config"
-	"github.com/davecgh/go-spew/spew"
 	"github.com/dgrijalva/jwt-go"
 )
 
@@ -21,7 +20,6 @@ type ApiError struct {
 }
 
 func responseJson(w http.ResponseWriter, data interface{}) {
-	spew.Print(data)
 	w.Header().Set("Content-Type", "application/json")
 	err := json.NewEncoder(w).Encode(data)
 	if err != nil {
