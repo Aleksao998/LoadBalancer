@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package bankAccount;
+option go_package="/bankAccountpb";
+
+message BankAccountRequest {
+    string name = 1;
+	string userId = 2;
+}
+
+message BankAccountResponse {
+    string bankAccountId = 1;
+}
+
+message DeleteBankAccountResponse {
+}
+
+message FetchBankAccountResponse {
+	string name = 1;
+	float amount = 2;
+}
+
+
+service BankAccountService{
+    rpc CreateBankAccount(BankAccountRequest) returns (BankAccountResponse);
+	rpc DeleteBankAccount(BankAccountRequest) returns (DeleteBankAccountResponse);
+	rpc FetchBankAccount(BankAccountRequest) returns (FetchBankAccountResponse);
+}

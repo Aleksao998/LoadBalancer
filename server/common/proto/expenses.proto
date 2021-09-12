@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package expenses;
+option go_package="/expensespb";
+
+message CreateExpenseRequest {
+    string name = 1;
+	string bankAccountId = 2;
+	float Amount = 3;
+}
+
+message CreateExpenseResponse {
+    string expenseId = 1;
+}
+
+message DeleteExpenseRequest {
+	string name = 1;
+	string bankAccountId = 2;
+}
+
+message DeleteExpensetResponse {
+}
+
+message Expense {
+	string name = 1;
+	float Amount = 3;
+}
+
+message FetchExpensesRequest {
+	string bankAccountId = 1;
+}
+
+message FetchExpensesResponse {
+	repeated Expense Expenses = 1;
+}
+
+
+
+service ExpensesService{
+    rpc CreateExpense(CreateExpenseRequest) returns (CreateExpenseResponse);
+	rpc DeleteExpense(DeleteExpenseRequest) returns (DeleteExpensetResponse);
+	rpc FetchExpenses(FetchExpensesRequest) returns (FetchExpensesResponse);
+}

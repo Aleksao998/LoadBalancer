@@ -1,11 +1,11 @@
 package app
 
 import (
-	"context"
-	"fmt"
 	"net"
 
+	"github.com/Aleksao998/LoadBalancer/worker/api"
 	"github.com/Aleksao998/LoadBalancer/worker/api/pb/bankAccountpb"
+	"github.com/Aleksao998/LoadBalancer/worker/api/pb/expensespb"
 	"google.golang.org/grpc"
 )
 
@@ -18,18 +18,6 @@ type App struct {
 
 type Server struct{}
 
-func (*Server) CreateBankAccount(ctx context.Context, req *bankAccountpb.CreateBankAccountRequest) (*bankAccountpb.CreateBankAccountResponse, error) {
-	name := req.GetName()
-	fmt.Printf("USAOO")
-	result := "Hello " + name
-
-	res := bankAccountpb.CreateBankAccountResponse{
-		Name: result,
-	}
-
-	return &res, nil
-}
-
 func (this *App) Run() {
 	lis, err := net.Listen("tcp", "0.0.0.0:50051")
 	if err != nil {
@@ -37,9 +25,18 @@ func (this *App) Run() {
 	}
 
 	s := grpc.NewServer()
-	bankAccountpb.RegisterCreateBankAccountServiceServer(s, &Server{})
-
+	this.registerServices(s)
 	if err := s.Serve(lis); err != nil {
 		panic("Failed to serve server")
 	}
+}
+
+func (this App) registerServices(s *grpc.Server) {
+	dbConnection := this.getConnection()
+	api := api.Api{
+		Database: dbConnection,
+	}
+
+	bankAccountpb.RegisterBankAccountServiceServer(s, &api)
+	expensespb.RegisterExpensesServiceServer(s, &api)
 }

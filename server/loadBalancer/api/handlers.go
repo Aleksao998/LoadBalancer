@@ -9,14 +9,20 @@ import (
 
 	"github.com/Aleksao998/LoadBalancer/config"
 	"github.com/dgrijalva/jwt-go"
+	"google.golang.org/grpc"
 )
 
 type Api struct {
-	Database *sql.DB
+	Database   *sql.DB
+	GrpcClient *grpc.ClientConn
 }
 
 type ApiError struct {
 	ErrorMsg string `json:"error_message"`
+}
+
+type ApiSuccess struct {
+	Status string `json:"status"`
 }
 
 func responseJson(w http.ResponseWriter, data interface{}) {
