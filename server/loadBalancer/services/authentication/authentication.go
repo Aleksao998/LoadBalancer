@@ -3,6 +3,7 @@ package authentication
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/Aleksao998/LoadBalancer/config"
 	"github.com/dgrijalva/jwt-go"
@@ -62,6 +63,7 @@ func GenerateToken(email string) (string, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 		"email": email,
+		"exp":   time.Now().Add(time.Minute * 3).Unix(),
 	})
 
 	tokenString, err := token.SignedString([]byte(secret))
