@@ -1,3 +1,12 @@
+# INSTRUCTION 
+
+1.To start load balance service : /loadBalancer > go run main.go
+
+2.To start worker service: /worker > go run main.go -port=...
+
+If port is not setted, worker service will not start! (no port error)
+
+
 # REGRESION
 
 1. REGISTRATION
