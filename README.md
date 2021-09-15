@@ -9,7 +9,7 @@ If port is not setted, worker service will not start! (no port error)
 
 # REGRESION
 
-1. REGISTRATION
+1.REGISTRATION
 ---------------------
 1.a Registration happy path = YES
 
