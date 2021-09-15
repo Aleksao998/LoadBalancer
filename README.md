@@ -78,8 +78,8 @@ If port is not setted, worker service will not start! (no port error)
 
 6.e Return null if no expense to delete = YES
 
-6.f Fetch expense happy path = yes
+6.f Fetch expense happy path = YES
 
-6.g Return null if no expense 
+6.g Return null if no expense = YES
 
 
