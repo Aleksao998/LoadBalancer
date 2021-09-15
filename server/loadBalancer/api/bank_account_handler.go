@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/Aleksao998/LoadBalancer/api/pb/bankAccountpb"
@@ -26,13 +27,18 @@ func (this *Api) CreateBankAccount(w http.ResponseWriter, r *http.Request) {
 	var bankAccount BankAccount
 	json.NewDecoder(r.Body).Decode(&bankAccount)
 
-	c := bankAccountpb.NewBankAccountServiceClient(this.GrpcClient)
+	worker := this.LoadBalancer.Next()
+	if worker == nil {
+		this.responseError(w, 400, fmt.Errorf("No Worker Available"))
+		return
+	}
+
 	req := &bankAccountpb.BankAccountRequest{
 		Name:   bankAccount.Name,
 		UserId: bankAccount.UserId,
 	}
 
-	res, err := c.CreateBankAccount(context.Background(), req)
+	res, err := worker.BankService.CreateBankAccount(context.Background(), req)
 	if err != nil {
 		this.responseError(w, 400, err)
 		return
@@ -45,13 +51,18 @@ func (this Api) FetchBankAccount(w http.ResponseWriter, r *http.Request) {
 	var bankAccount BankAccount
 	json.NewDecoder(r.Body).Decode(&bankAccount)
 
-	c := bankAccountpb.NewBankAccountServiceClient(this.GrpcClient)
+	worker := this.LoadBalancer.Next()
+	if worker == nil {
+		this.responseError(w, 400, fmt.Errorf("No Worker Available"))
+		return
+	}
+
 	req := &bankAccountpb.BankAccountRequest{
 		Name:   bankAccount.Name,
 		UserId: bankAccount.UserId,
 	}
 
-	res, err := c.FetchBankAccount(context.Background(), req)
+	res, err := worker.BankService.FetchBankAccount(context.Background(), req)
 	if err != nil {
 		this.responseError(w, 400, err)
 		return
@@ -64,13 +75,18 @@ func (this Api) DeleteBankAccount(w http.ResponseWriter, r *http.Request) {
 	var bankAccount BankAccount
 	json.NewDecoder(r.Body).Decode(&bankAccount)
 
-	c := bankAccountpb.NewBankAccountServiceClient(this.GrpcClient)
+	worker := this.LoadBalancer.Next()
+	if worker == nil {
+		this.responseError(w, 400, fmt.Errorf("No Worker Available"))
+		return
+	}
+
 	req := &bankAccountpb.BankAccountRequest{
 		Name:   bankAccount.Name,
 		UserId: bankAccount.UserId,
 	}
 
-	_, err := c.DeleteBankAccount(context.Background(), req)
+	_, err := worker.BankService.DeleteBankAccount(context.Background(), req)
 	if err != nil {
 		this.responseError(w, 400, err)
 		return

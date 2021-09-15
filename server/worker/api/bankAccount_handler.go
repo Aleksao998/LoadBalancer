@@ -1,13 +1,14 @@
 package api
 
 import (
+	"context"
 	"fmt"
 	"strconv"
-	"context"
-	"google.golang.org/grpc/status"
-	"google.golang.org/grpc/codes"
-	"github.com/Aleksao998/LoadBalancer/worker/services/bankAccount"
+
 	"github.com/Aleksao998/LoadBalancer/worker/api/pb/bankAccountpb"
+	"github.com/Aleksao998/LoadBalancer/worker/services/bankAccount"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 func (this *Api) CreateBankAccount(ctx context.Context, req *bankAccountpb.BankAccountRequest) (*bankAccountpb.BankAccountResponse, error) {
@@ -28,10 +29,10 @@ func (this *Api) CreateBankAccount(ctx context.Context, req *bankAccountpb.BankA
 		)
 	}
 
-	bank_account_id, err := bankAccount.RegisterBankAccount(name,id, this.Database)
+	bank_account_id, err := bankAccount.RegisterBankAccount(name, id, this.Database)
 	if err != nil {
 		return nil, status.Errorf(
-			codes.Internal,err.Error(),
+			codes.Internal, err.Error(),
 		)
 	}
 
@@ -46,7 +47,6 @@ func (this *Api) CreateBankAccount(ctx context.Context, req *bankAccountpb.BankA
 func (this *Api) FetchBankAccount(ctx context.Context, req *bankAccountpb.BankAccountRequest) (*bankAccountpb.FetchBankAccountResponse, error) {
 	name := req.GetName()
 	id := req.GetUserId()
-
 	ok, err := bankAccount.DoesBankAccountExists(name, id, this.Database)
 	if err != nil {
 		return nil, status.Errorf(
@@ -60,17 +60,16 @@ func (this *Api) FetchBankAccount(ctx context.Context, req *bankAccountpb.BankAc
 		)
 	}
 
-	bankAccountAmount, err := bankAccount.FetchBankAccountAmount(name,id, this.Database)
+	bankAccountAmount, err := bankAccount.FetchBankAccountAmount(name, id, this.Database)
 	if err != nil {
 		return nil, status.Errorf(
-			codes.Internal,err.Error(),
+			codes.Internal, err.Error(),
 		)
 	}
 
-
 	res := bankAccountpb.FetchBankAccountResponse{
-		Name: name,
-		Amount:  bankAccountAmount,
+		Name:   name,
+		Amount: bankAccountAmount,
 	}
 
 	return &res, nil
@@ -80,15 +79,14 @@ func (this *Api) DeleteBankAccount(ctx context.Context, req *bankAccountpb.BankA
 	name := req.GetName()
 	id := req.GetUserId()
 
-	err := bankAccount.DeleteBankAccount(name,id, this.Database)
+	err := bankAccount.DeleteBankAccount(name, id, this.Database)
 	if err != nil {
 		return nil, status.Errorf(
-			codes.Internal,err.Error(),
+			codes.Internal, err.Error(),
 		)
 	}
 
-	res := bankAccountpb.DeleteBankAccountResponse{
-	}
+	res := bankAccountpb.DeleteBankAccountResponse{}
 
 	return &res, nil
 }

@@ -8,13 +8,13 @@ import (
 	"strings"
 
 	"github.com/Aleksao998/LoadBalancer/config"
+	"github.com/Aleksao998/LoadBalancer/services/loadBalancer"
 	"github.com/dgrijalva/jwt-go"
-	"google.golang.org/grpc"
 )
 
 type Api struct {
-	Database   *sql.DB
-	GrpcClient *grpc.ClientConn
+	Database     *sql.DB
+	LoadBalancer *loadBalancer.WorkersPool
 }
 
 type ApiError struct {

@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package loadBalancer;
+option go_package="/loadBalancerpb";
+
+message RegisterRequest {
+    string url = 1;
+}
+
+message RegisterResponse {
+}
+
+message DeregisterRequest {
+	 string url = 1;
+}
+
+message DeregisterResponse {
+}
+
+
+service LoadBalancerService{
+    rpc RegisterWorker(RegisterRequest) returns (RegisterResponse);
+	rpc DeregisterWorker(DeregisterRequest) returns (DeregisterResponse);
+}

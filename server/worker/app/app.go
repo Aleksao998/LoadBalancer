@@ -1,7 +1,9 @@
 package app
 
 import (
+	"fmt"
 	"net"
+	"time"
 
 	"github.com/Aleksao998/LoadBalancer/worker/api"
 	"github.com/Aleksao998/LoadBalancer/worker/api/pb/bankAccountpb"
@@ -10,19 +12,35 @@ import (
 )
 
 func NewApp() App {
-	return App{}
+	cc, err := grpc.Dial("localhost:50052", grpc.WithInsecure())
+	if err != nil {
+		fmt.Print(err)
+	}
+	return App{
+		GrpcClient: cc,
+	}
 }
 
 type App struct {
+	GrpcClient *grpc.ClientConn
 }
 
-type Server struct{}
+func (this *App) Run(port string) {
+	err := this.registerToWorkersPool(port)
+	if err != nil {
+		time.Sleep(60 * time.Second)
+		fmt.Println("started again")
+		err := this.registerToWorkersPool(port)
+		if err != nil {
+			panic(err)
+		}
+	}
 
-func (this *App) Run() {
-	lis, err := net.Listen("tcp", "0.0.0.0:50051")
+	lis, err := net.Listen("tcp", "0.0.0.0:"+port)
 	if err != nil {
 		panic("Failed to listen server")
 	}
+	fmt.Printf("Service starter on port: %s \n", port)
 
 	s := grpc.NewServer()
 	this.registerServices(s)
